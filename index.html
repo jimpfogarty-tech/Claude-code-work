@@ -3,114 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asteroids Game</title>
-    <style>
-        body { margin: 0; overflow: hidden; }  
-        canvas { background: black; display: block; margin: auto; }
-    </style>
+    <title>Player Movement Controls</title>
 </head>
 <body>
-    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <h1>Player Movement Controls</h1>
+    <p>Use the Arrow keys to move the player!</p>
     <script>
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-
-        // Game variables
-        let score = 0;
-        let asteroids = [];
-        let bullets = [];
-
-        // Initialize player
-        const player = { x: canvas.width / 2, y: canvas.height / 2, radius: 20 };
-
-        // Initialize asteroids
-        function createAsteroid() {
-            const x = Math.random() * canvas.width;
-            const y = Math.random() * canvas.height;
-            const radius = Math.random() * (30 - 10) + 10;
-            asteroids.push({ x, y, radius });
-        }
-
-        // Update game
-        function update() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawPlayer();
-            drawAsteroids();
-            drawBullets();
-            detectCollisions();
-            // Update score
-            ctx.fillStyle = "white";
-            ctx.fillText(`Score: ${score}`, 10, 20);
-        }
-
-        // Draw player
-        function drawPlayer() {
-            ctx.fillStyle = "white";
-            ctx.beginPath();
-            ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2);
-            ctx.fill();
-        }
-
-        // Draw asteroids
-        function drawAsteroids() {
-            ctx.fillStyle = "grey";
-            asteroids.forEach(asteroid => {
-                ctx.beginPath();
-                ctx.arc(asteroid.x, asteroid.y, asteroid.radius, 0, Math.PI * 2);
-                ctx.fill();
-            });
-        }
-
-        // Create and draw bullets
-        function shoot() {
-            const bullet = { x: player.x, y: player.y, radius: 5 };
-            bullets.push(bullet);
-        }
-
-        function drawBullets() {
-            ctx.fillStyle = "red";
-            bullets.forEach(bullet => {
-                ctx.beginPath();
-                ctx.arc(bullet.x, bullet.y, bullet.radius, 0, Math.PI * 2);
-                ctx.fill();
-            });
-        }
-
-        // Detect collisions
-        function detectCollisions() {
-            asteroids.forEach((asteroid, index) => {
-                bullets.forEach((bullet, bulletIndex) => {
-                    const dx = asteroid.x - bullet.x;
-                    const dy = asteroid.y - bullet.y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-
-                    if (distance < asteroid.radius + bullet.radius) {
-                        asteroids.splice(index, 1);
-                        bullets.splice(bulletIndex, 1);
-                        score += 10;
-                    }
-                });
-            });
-        }
-
-        // Game loop
-        function gameLoop() {
-            update();
-            requestAnimationFrame(gameLoop);
-        }
-
-        // Initialize game
-        function init() {
-            for (let i = 0; i < 5; i++) createAsteroid();  // Create initial asteroids
-            gameLoop();
-        }
-
-        // Event listener for shooting
-        window.addEventListener('keydown', (e) => {
-            if (e.code === 'Space') shoot();
+        document.addEventListener('keydown', function(event) {
+            switch (event.key) {
+                case 'ArrowUp':
+                    console.log('Move Up');
+                    break;
+                case 'ArrowDown':
+                    console.log('Move Down');
+                    break;
+                case 'ArrowLeft':
+                    console.log('Move Left');
+                    break;
+                case 'ArrowRight':
+                    console.log('Move Right');
+                    break;
+                default:
+                    break;
+            }
         });
-
-        init();
     </script>
 </body>
 </html>
