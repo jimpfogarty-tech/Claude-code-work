@@ -3,30 +3,298 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Player Movement Controls</title>
+    <title>Asteroids Game</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: black; }  
+        canvas { background: black; display: block; margin: auto; }
+        #gameInfo { position: absolute; top: 10px; left: 10px; color: white; font-family: Arial; font-size: 20px; }
+    </style>
 </head>
 <body>
-    <h1>Player Movement Controls</h1>
-    <p>Use the Arrow keys to move the player!</p>
+    <div id="gameInfo">
+        <div>Score: <span id="score">0</span></div>
+        <div>Lives: <span id="lives">3</span></div>
+    </div>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
     <script>
-        document.addEventListener('keydown', function(event) {
-            switch (event.key) {
-                case 'ArrowUp':
-                    console.log('Move Up');
-                    break;
-                case 'ArrowDown':
-                    console.log('Move Down');
-                    break;
-                case 'ArrowLeft':
-                    console.log('Move Left');
-                    break;
-                case 'ArrowRight':
-                    console.log('Move Right');
-                    break;
-                default:
-                    break;
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Game variables
+        let score = 0;
+        let lives = 3;
+        let asteroids = [];
+        let bullets = [];
+        let keys = {};
+        let gameOver = false;
+
+        // Audio context for sound effects
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+        // Sound effect function
+        function playSound(frequency, duration, type = 'sine') {
+            const oscillator = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            
+            oscillator.connect(gain);
+            gain.connect(audioContext.destination);
+            
+            oscillator.frequency.value = frequency;
+            oscillator.type = type;
+            
+            gain.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration);
+        }
+
+        // Initialize player
+        const player = { 
+            x: canvas.width / 2, 
+            y: canvas.height / 2, 
+            radius: 15,
+            angle: 0,
+            velocity: { x: 0, y: 0 },
+            invulnerable: 0
+        };
+
+        // Create asteroid
+        function createAsteroid(x = null, y = null, radius = null) {
+            const asteroidX = x || Math.random() * canvas.width;
+            const asteroidY = y || Math.random() * canvas.height;
+            const asteroidRadius = radius || 30;
+            const angle = Math.random() * Math.PI * 2;
+            const velocity = 0.5 + Math.random() * 1.5;
+            asteroids.push({ 
+                x: asteroidX, 
+                y: asteroidY, 
+                radius: asteroidRadius,
+                velocityX: Math.cos(angle) * velocity,
+                velocityY: Math.sin(angle) * velocity
+            });
+        }
+
+        // Update player movement
+        function updatePlayer() {
+            if (keys['ArrowLeft']) player.angle -= 0.1;
+            if (keys['ArrowRight']) player.angle += 0.1;
+            if (keys['ArrowUp']) {
+                player.velocity.x += Math.cos(player.angle) * 0.5;
+                player.velocity.y += Math.sin(player.angle) * 0.5;
+                playSound(200, 0.1);
+            }
+
+            // Apply friction
+            player.velocity.x *= 0.99;
+            player.velocity.y *= 0.99;
+
+            // Cap maximum speed
+            const speed = Math.sqrt(player.velocity.x ** 2 + player.velocity.y ** 2);
+            if (speed > 5) {
+                player.velocity.x = (player.velocity.x / speed) * 5;
+                player.velocity.y = (player.velocity.y / speed) * 5;
+            }
+
+            // Update position
+            player.x += player.velocity.x;
+            player.y += player.velocity.y;
+
+            // Wrap around edges
+            if (player.x < 0) player.x = canvas.width;
+            if (player.x > canvas.width) player.x = 0;
+            if (player.y < 0) player.y = canvas.height;
+            if (player.y > canvas.height) player.y = 0;
+
+            // Decrease invulnerability timer
+            if (player.invulnerable > 0) player.invulnerable--;
+        }
+
+        // Update asteroids
+        function updateAsteroids() {
+            asteroids.forEach(asteroid => {
+                asteroid.x += asteroid.velocityX;
+                asteroid.y += asteroid.velocityY;
+
+                // Wrap around edges
+                if (asteroid.x < 0) asteroid.x = canvas.width;
+                if (asteroid.x > canvas.width) asteroid.x = 0;
+                if (asteroid.y < 0) asteroid.y = canvas.height;
+                if (asteroid.y > canvas.height) asteroid.y = 0;
+            });
+        }
+
+        // Update bullets
+        function updateBullets() {
+            bullets = bullets.filter(bullet => {
+                bullet.x += bullet.velocityX;
+                bullet.y += bullet.velocityY;
+                return bullet.x > 0 && bullet.x < canvas.width && bullet.y > 0 && bullet.y < canvas.height;
+            });
+        }
+
+        // Update game
+        function update() {
+            ctx.fillStyle = "black";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            if (!gameOver) {
+                updatePlayer();
+                updateAsteroids();
+                updateBullets();
+                detectCollisions();
+            }
+            
+            drawPlayer();
+            drawAsteroids();
+            drawBullets();
+            updateUI();
+        }
+
+        // Draw player
+        function drawPlayer() {
+            if (player.invulnerable > 0 && Math.floor(player.invulnerable / 5) % 2) return;
+            
+            ctx.save();
+            ctx.translate(player.x, player.y);
+            ctx.rotate(player.angle);
+            ctx.fillStyle = "white";
+            ctx.beginPath();
+            ctx.moveTo(15, 0);
+            ctx.lineTo(-15, -10);
+            ctx.lineTo(-5, 0);
+            ctx.lineTo(-15, 10);
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+        }
+
+        // Draw asteroids
+        function drawAsteroids() {
+            ctx.fillStyle = "grey";
+            asteroids.forEach(asteroid => {
+                ctx.beginPath();
+                ctx.arc(asteroid.x, asteroid.y, asteroid.radius, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        // Shoot bullet
+        function shoot() {
+            const bulletSpeed = 7;
+            const bullet = { 
+                x: player.x + Math.cos(player.angle) * 20, 
+                y: player.y + Math.sin(player.angle) * 20, 
+                radius: 3,
+                velocityX: Math.cos(player.angle) * bulletSpeed + player.velocity.x,
+                velocityY: Math.sin(player.angle) * bulletSpeed + player.velocity.y
+            };
+            bullets.push(bullet);
+            playSound(800, 0.05);
+        }
+
+        function drawBullets() {
+            ctx.fillStyle = "red";
+            bullets.forEach(bullet => {
+                ctx.beginPath();
+                ctx.arc(bullet.x, bullet.y, bullet.radius, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        // Detect collisions
+        function detectCollisions() {
+            // Asteroid-bullet collisions
+            for (let i = asteroids.length - 1; i >= 0; i--) {
+                const asteroid = asteroids[i];
+                for (let j = bullets.length - 1; j >= 0; j--) {
+                    const bullet = bullets[j];
+                    const dx = asteroid.x - bullet.x;
+                    const dy = asteroid.y - bullet.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < asteroid.radius + bullet.radius) {
+                        bullets.splice(j, 1);
+                        
+                        // Split asteroid into smaller pieces
+                        if (asteroid.radius > 15) {
+                            for (let k = 0; k < 2; k++) {
+                                createAsteroid(asteroid.x, asteroid.y, asteroid.radius - 10);
+                            }
+                            playSound(400, 0.1);
+                        } else {
+                            playSound(600, 0.15);
+                        }
+                        
+                        score += Math.round(asteroid.radius * 10);
+                        asteroids.splice(i, 1);
+                        break;
+                    }
+                }
+            }
+
+            // Player-asteroid collisions
+            if (player.invulnerable === 0) {
+                asteroids.forEach(asteroid => {
+                    const dx = player.x - asteroid.x;
+                    const dy = player.y - asteroid.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < player.radius + asteroid.radius) {
+                        lives--;
+                        player.invulnerable = 120;
+                        playSound(100, 0.3);
+                        
+                        if (lives <= 0) {
+                            gameOver = true;
+                            ctx.fillStyle = "white";
+                            ctx.font = "40px Arial";
+                            ctx.fillText("GAME OVER", canvas.width / 2 - 150, canvas.height / 2);
+                        }
+                    }
+                });
+            }
+
+            // Spawn new asteroids if all destroyed
+            if (asteroids.length === 0 && !gameOver) {
+                for (let i = 0; i < 5 + Math.floor(score / 100); i++) {
+                    createAsteroid();
+                }
+            }
+        }
+
+        // Update UI
+        function updateUI() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('lives').textContent = lives;
+        }
+
+        // Game loop
+        function gameLoop() {
+            update();
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Initialize game
+        function init() {
+            for (let i = 0; i < 5; i++) createAsteroid();
+            gameLoop();
+        }
+
+        // Event listeners
+        window.addEventListener('keydown', (e) => {
+            keys[e.code] = true;
+            if (e.code === 'Space') {
+                e.preventDefault();
+                shoot();
             }
         });
+
+        window.addEventListener('keyup', (e) => {
+            keys[e.code] = false;
+        });
+
+        init();
     </script>
 </body>
 </html>
