@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FOGARTY SPACE INVADERS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+            image-rendering: pixelated;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="game-canvas" width="672" height="768"></canvas>
+    <script src="part1_sprites_audio.js"></script>
+    <script src="part2_constants_background.js"></script>
+    <script src="part3_state_entities.js"></script>
+    <script src="part4_ui_loop.js"></script>
+</body>
+</html>
