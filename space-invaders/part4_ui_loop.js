@@ -189,7 +189,7 @@ const UI = {
         }
 
         // Credit text - bottom center
-        drawText(ctx, 'SPACE INVADERS BY JPF ORBITAL STUDIOS', W / 2, H - 18, 8, CONFIG.COLORS.credit, 'center');
+        drawText(ctx, 'FOGARTY SPACE INVADERS BY JPF ORBITAL STUDIOS', W / 2, H - 18, 8, CONFIG.COLORS.credit, 'center');
 
         // Theme name - bottom right
         drawText(ctx, BackgroundRenderer.currentTheme.toUpperCase(), W - 20, H - 34, 10, CONFIG.COLORS.subtitle, 'right');
@@ -249,12 +249,13 @@ const UI = {
         ctx.save();
         ctx.shadowBlur = glowIntensity;
         ctx.shadowColor = CONFIG.COLORS.title;
-        drawText(ctx, 'SPACE', W / 2, 240, 42, CONFIG.COLORS.title, 'center');
-        drawText(ctx, 'INVADERS', W / 2, 290, 42, CONFIG.COLORS.title, 'center');
+        drawText(ctx, 'FOGARTY', W / 2, 230, 36, CONFIG.COLORS.title, 'center');
+        drawText(ctx, 'SPACE', W / 2, 275, 36, CONFIG.COLORS.title, 'center');
+        drawText(ctx, 'INVADERS', W / 2, 320, 36, CONFIG.COLORS.title, 'center');
         ctx.restore();
 
         // Subtitle
-        drawText(ctx, 'by JPF Orbital Studios', W / 2, 345, 14, CONFIG.COLORS.subtitle, 'center');
+        drawText(ctx, 'by JPF Orbital Studios', W / 2, 370, 14, CONFIG.COLORS.subtitle, 'center');
 
         // Score table
         const tableY = 400;
@@ -292,7 +293,7 @@ const UI = {
         drawText(ctx, 'P: PAUSE', W / 2, 660, 8, CONFIG.COLORS.subtitle, 'center');
 
         // Credit
-        drawText(ctx, 'SPACE INVADERS BY JPF ORBITAL STUDIOS', W / 2, H - 18, 8, CONFIG.COLORS.credit, 'center');
+        drawText(ctx, 'FOGARTY SPACE INVADERS BY JPF ORBITAL STUDIOS', W / 2, H - 18, 8, CONFIG.COLORS.credit, 'center');
     },
 
     drawGameOverScreen(ctx) {

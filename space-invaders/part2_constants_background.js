@@ -52,7 +52,7 @@ const CONFIG = {
     // Shields
     SHIELD_COUNT: 4,
     SHIELD_Y: 620,
-    SHIELD_SCALE: 3,
+    SHIELD_SCALE: 1,
     SHIELD_EROSION_RADIUS: 4,
 
     // Colors
