@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: ["claude/investigate-code-access-2F2du", "main"]
+    branches: ["claude/space-invaders-game-0A2gq", "claude/investigate-code-access-2F2du", "main"]
 
 permissions:
   contents: read
