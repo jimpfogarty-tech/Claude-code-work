@@ -108,6 +108,30 @@ const Input = {
                 this.consumed[action] = false;
             }
         });
+
+        // Mobile touch controls
+        this._setupMobileBtn('mb-left', 'left');
+        this._setupMobileBtn('mb-right', 'right');
+        this._setupMobileBtn('mb-fire', 'fire');
+        this._setupMobileBtn('mb-pause', 'pause');
+        this._setupMobileBtn('mb-enter', 'enter');
+    },
+
+    _setupMobileBtn(id, action) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            this.keys[action] = true;
+            if (!this.consumed[action]) {
+                this.pressed[action] = true;
+            }
+        });
+        el.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            this.keys[action] = false;
+            this.consumed[action] = false;
+        });
     },
 
     _mapKey(code, key) {
