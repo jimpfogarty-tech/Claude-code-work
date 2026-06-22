@@ -1,0 +1,18 @@
+{
+  "name": "claude-code-work-marketplace",
+  "owner": {
+    "name": "jimpfogarty-tech"
+  },
+  "plugins": [
+    {
+      "name": "seo-audit",
+      "source": "./plugins/seo-audit",
+      "description": "Audit a live URL for on-page SEO (titles, meta, headings, alt text, canonical/robots, Open Graph, structured data) and enrich with SimilarWeb keyword, SERP, and traffic data.",
+      "version": "0.1.0",
+      "author": {
+        "name": "jimpfogarty-tech"
+      },
+      "keywords": ["seo", "audit", "marketing", "similarweb"]
+    }
+  ]
+}
