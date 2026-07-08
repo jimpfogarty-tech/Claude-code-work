@@ -1,0 +1,9 @@
+{
+  "name": "seo-audit",
+  "description": "Audit a live URL for on-page SEO and enrich the findings with SimilarWeb keyword, SERP, and traffic data.",
+  "version": "0.1.0",
+  "author": {
+    "name": "jimpfogarty-tech"
+  },
+  "keywords": ["seo", "audit", "marketing", "similarweb"]
+}
