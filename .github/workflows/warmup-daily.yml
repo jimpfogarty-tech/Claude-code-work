@@ -1,0 +1,96 @@
+name: Warm-up daily sweep
+
+# Measures where each tracked program's mail landed in the seed mailbox, then
+# writes a placement report.
+#
+# Note on engagement: GitHub-hosted runners use datacenter IP ranges, which ESPs
+# routinely filter out of engagement metrics as non-human. Placement measurement
+# is unaffected and is the reason to run this. Set WARMUP_ENGAGE to "true" in
+# repo variables only if you want the open/click layer to run here anyway.
+
+on:
+  schedule:
+    # 14:00 UTC daily (10:00 ET / 07:00 PT) -- after typical retail morning sends.
+    - cron: "0 14 * * *"
+  workflow_dispatch:
+    inputs:
+      engage:
+        description: "Run the open/click layer as well"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: warmup-daily
+  cancel-in-progress: false
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: warmup-app
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: warmup-app/requirements.txt
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Install Chromium
+        run: python -m playwright install --with-deps chromium
+
+      # Rolling cache: each run writes a new key, and restore-keys picks up the
+      # most recent previous one. This is what carries placement history forward,
+      # since runners keep nothing between runs.
+      - name: Restore placement database
+        uses: actions/cache@v4
+        with:
+          path: warmup-app/data
+          key: warmup-db-${{ github.run_id }}
+          restore-keys: warmup-db-
+
+      - name: Run daily sweep
+        env:
+          WARMUP_IMAP_HOST: ${{ secrets.WARMUP_IMAP_HOST || 'imap.gmail.com' }}
+          WARMUP_IMAP_USER: ${{ secrets.WARMUP_IMAP_USER }}
+          WARMUP_IMAP_PASSWORD: ${{ secrets.WARMUP_IMAP_PASSWORD }}
+        run: |
+          ENGAGE_FLAG="--no-engage"
+          if [ "${{ inputs.engage }}" = "true" ] || [ "${{ vars.WARMUP_ENGAGE }}" = "true" ]; then
+            ENGAGE_FLAG=""
+          fi
+          python -m warmup.cli daily $ENGAGE_FLAG
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: placement-report
+          path: warmup-app/reports/
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Commit report
+        if: success()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/
+          if git diff --staged --quiet; then
+            echo "No report changes to commit."
+          else
+            git commit -m "Warm-up placement report $(date -u +%Y-%m-%d)"
+            git push
+          fi

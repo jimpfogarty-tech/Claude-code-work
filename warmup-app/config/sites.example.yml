@@ -1,0 +1,33 @@
+# Copy to config/sites.yml and fill in your own properties.
+#
+# Only `key`, `name`, and `signup_url` are required. The signup module tries to
+# find the email field on its own; add `selectors` only when autodetection fails.
+#
+# `senders` is what the daily sweep matches on -- list every From: domain or
+# address that this program mails from, including ESP subdomains.
+
+sites:
+  - key: fullbeauty
+    name: FullBeauty
+    signup_url: https://www.fullbeauty.com/
+    senders:
+      - "@fullbeauty.com"
+      - "@email.fullbeauty.com"
+
+  - key: woman-within
+    name: Woman Within
+    signup_url: https://www.womanwithin.com/
+    senders:
+      - "@womanwithin.com"
+      - "@email.womanwithin.com"
+
+  - key: kingsize
+    name: KingSize
+    signup_url: https://www.kingsizedirect.com/
+    senders:
+      - "@kingsizedirect.com"
+    # Example of overriding autodetection for a stubborn form:
+    # selectors:
+    #   email_input: "input[name='emailSignup']"
+    #   submit: "button.email-signup-submit"
+    #   dismiss_modal: "button[aria-label='Close']"
