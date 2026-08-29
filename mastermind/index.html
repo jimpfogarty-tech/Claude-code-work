@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#14100e">
+    <meta name="description" content="Mastermind - crack the hidden code in the Fogarty Arcade.">
+    <title>FOGARTY MASTERMIND</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ============================================================= MENU ==== -->
+<section class="screen is-active" id="screen-menu">
+    <div class="menu">
+        <header class="menu-head">
+            <div class="logo-pegs" aria-hidden="true">
+                <span class="logo-peg" data-color="0"></span>
+                <span class="logo-peg" data-color="3"></span>
+                <span class="logo-peg" data-color="5"></span>
+                <span class="logo-peg" data-color="2"></span>
+            </div>
+            <h1>Mastermind</h1>
+            <p class="tagline">Break the hidden code.</p>
+        </header>
+
+        <div class="mode-list">
+            <button class="mode-card" data-mode="solo">
+                <span class="mode-name">Solo</span>
+                <span class="mode-desc">A fresh random code. Just you against it.</span>
+            </button>
+            <button class="mode-card" data-mode="daily">
+                <span class="mode-name">Daily Challenge <span class="badge" id="daily-badge">#0</span></span>
+                <span class="mode-desc" id="daily-desc">One code a day, the same for everyone.</span>
+            </button>
+            <button class="mode-card" data-mode="versus">
+                <span class="mode-name">Pass &amp; Play</span>
+                <span class="mode-desc">Two players trade off setting and cracking codes.</span>
+            </button>
+        </div>
+
+        <div class="field">
+            <span class="field-label" id="difficulty-label">Difficulty</span>
+            <div class="segmented" role="radiogroup" aria-labelledby="difficulty-label" id="difficulty-picker"></div>
+            <p class="field-hint" id="difficulty-hint"></p>
+        </div>
+
+        <div class="menu-actions">
+            <button class="ghost-btn" id="btn-stats" type="button">Stats</button>
+            <button class="ghost-btn" id="btn-help" type="button">How to play</button>
+            <button class="ghost-btn" id="btn-sound" type="button" aria-pressed="true">Sound on</button>
+            <button class="ghost-btn" id="btn-colorblind" type="button" aria-pressed="false">Symbols off</button>
+        </div>
+
+        <a class="back-link" href="../">&larr; Fogarty Arcade</a>
+    </div>
+</section>
+
+<!-- ================================================== CODEMAKER (VERSUS) == -->
+<section class="screen" id="screen-setcode">
+    <div class="panel">
+        <h2 id="setcode-title">Player 1 &mdash; set the code</h2>
+        <p class="panel-text" id="setcode-sub">Choose a secret code for your opponent to break.</p>
+        <div class="setcode-row" id="setcode-row"></div>
+        <div class="palette" id="setcode-palette"></div>
+        <div class="panel-actions">
+            <button class="ghost-btn" id="setcode-clear" type="button">Clear</button>
+            <button class="ghost-btn" id="setcode-random" type="button">Random</button>
+            <button class="primary-btn" id="setcode-confirm" type="button" disabled>Lock it in</button>
+        </div>
+        <button class="text-btn" id="setcode-quit" type="button">Quit match</button>
+    </div>
+</section>
+
+<!-- ==================================================== HANDOFF CURTAIN == -->
+<section class="screen" id="screen-handoff">
+    <div class="panel curtain">
+        <div class="curtain-icon" aria-hidden="true">&#128274;</div>
+        <h2 id="handoff-title">Pass the device</h2>
+        <p class="panel-text" id="handoff-sub">Hand it to the other player, then continue.</p>
+        <div class="scoreline" id="handoff-score"></div>
+        <button class="primary-btn" id="handoff-continue" type="button">I'm ready</button>
+    </div>
+</section>
+
+<!-- ============================================================= GAME ==== -->
+<section class="screen" id="screen-game">
+    <header class="topbar">
+        <button class="icon-btn" id="game-back" type="button" aria-label="Back to menu">&larr;</button>
+        <div class="topbar-title">
+            <span class="topbar-mode" id="game-mode">Solo</span>
+            <span class="topbar-sub" id="game-sub">Classic &middot; 4 pegs, 6 colors</span>
+        </div>
+        <div class="topbar-tools">
+            <button class="icon-btn" id="game-help" type="button" aria-label="How to play">?</button>
+            <button class="icon-btn" id="game-sound" type="button" aria-label="Toggle sound" aria-pressed="true">&#128266;</button>
+        </div>
+    </header>
+
+    <div class="board-wrap">
+        <div class="board">
+            <div class="secret" id="secret">
+                <div class="secret-pegs" id="secret-pegs"></div>
+                <div class="secret-shield" id="secret-shield">
+                    <span class="secret-label">Secret code</span>
+                </div>
+            </div>
+
+            <div class="rows" id="rows"></div>
+        </div>
+    </div>
+
+    <div class="tray">
+        <div class="tray-status">
+            <span id="guess-counter">Guess 1 of 10</span>
+            <span id="versus-score" class="tray-score" hidden></span>
+        </div>
+        <div class="palette" id="palette"></div>
+        <div class="tray-actions">
+            <button class="ghost-btn" id="btn-clear" type="button">Clear</button>
+            <button class="primary-btn" id="btn-submit" type="button" disabled>Check</button>
+        </div>
+    </div>
+
+    <p class="sr-only" id="live-region" role="status" aria-live="polite"></p>
+</section>
+
+<!-- =========================================================== DIALOGS === -->
+<div class="overlay" id="overlay" hidden>
+
+    <div class="dialog" id="dialog-result" hidden>
+        <h2 id="result-title">Cracked it</h2>
+        <p class="dialog-text" id="result-text"></p>
+        <div class="result-code" id="result-code"></div>
+        <div class="stat-grid" id="result-stats"></div>
+        <pre class="share-preview" id="share-preview"></pre>
+        <div class="dialog-actions">
+            <button class="ghost-btn" id="result-share" type="button">Share</button>
+            <button class="ghost-btn" id="result-menu" type="button">Menu</button>
+            <button class="primary-btn" id="result-again" type="button">Play again</button>
+        </div>
+    </div>
+
+    <div class="dialog" id="dialog-stats" hidden>
+        <h2>Stats</h2>
+        <p class="dialog-text" id="stats-scope"></p>
+        <div class="stat-grid" id="stats-grid"></div>
+        <h3 class="dialog-subhead">Guess distribution</h3>
+        <div class="histogram" id="stats-histogram"></div>
+        <div class="dialog-actions">
+            <button class="primary-btn" id="stats-close" type="button">Close</button>
+        </div>
+    </div>
+
+    <div class="dialog" id="dialog-help" hidden>
+        <h2>How to play</h2>
+        <div class="help-body">
+            <p>A secret code of coloured pegs is hidden at the top of the board. Your job
+               is to work out exactly which colours it uses, and in exactly what order,
+               before you run out of rows.</p>
+            <p>Place pegs into the active row and press <strong>Check</strong>. The small
+               key pegs on the right tell you how close you got:</p>
+            <ul class="help-keys">
+                <li><span class="key-peg is-exact" aria-hidden="true"></span>
+                    <strong>Solid</strong> &mdash; one peg is the right colour in the right place.</li>
+                <li><span class="key-peg is-color" aria-hidden="true"></span>
+                    <strong>Hollow</strong> &mdash; one peg is the right colour in the wrong place.</li>
+                <li><span class="key-peg" aria-hidden="true"></span>
+                    <strong>Empty</strong> &mdash; that's one peg with no match at all.</li>
+            </ul>
+            <p>Key pegs never tell you <em>which</em> of your pegs they refer to &mdash;
+               that's the puzzle. Colours may repeat in the code.</p>
+            <p class="help-controls"><strong>Controls.</strong> Tap a colour to drop it into
+               the next open slot, or drag it where you want. Tap a placed peg to lift it
+               out. On a keyboard: number keys place a colour, Backspace removes the last
+               one, Enter checks the row.</p>
+        </div>
+        <div class="dialog-actions">
+            <button class="primary-btn" id="help-close" type="button">Got it</button>
+        </div>
+    </div>
+
+    <div class="dialog" id="dialog-confirm" hidden>
+        <h2 id="confirm-title">Leave the game?</h2>
+        <p class="dialog-text" id="confirm-text">Your progress in this round will be lost.</p>
+        <div class="dialog-actions">
+            <button class="ghost-btn" id="confirm-no" type="button">Stay</button>
+            <button class="primary-btn" id="confirm-yes" type="button">Leave</button>
+        </div>
+    </div>
+
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="rules.js"></script>
+<script src="store.js"></script>
+<script src="sfx.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

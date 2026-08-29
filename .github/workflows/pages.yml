@@ -26,6 +26,7 @@ jobs:
           mkdir -p _site
           cp -r asteroids _site/
           cp -r space-invaders _site/
+          cp -r mastermind _site/
           cp index.html _site/
       - uses: actions/configure-pages@v4
       - uses: actions/upload-pages-artifact@v3
