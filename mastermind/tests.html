@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mastermind engine tests</title>
+    <style>
+        body {
+            background: #14100e;
+            color: #f4ece5;
+            font-family: ui-monospace, Menlo, Consolas, monospace;
+            padding: 24px;
+            line-height: 1.6;
+        }
+        h1 { font-size: 1.3rem; margin-bottom: 4px; }
+        #summary { margin: 12px 0 20px; font-size: 1.05rem; font-weight: 700; }
+        #summary.pass { color: #4ade80; }
+        #summary.fail { color: #f4795b; }
+        .case { padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,.07); font-size: .88rem; }
+        .ok   { color: #4ade80; }
+        .bad  { color: #f4795b; }
+        .detail { color: #a2938a; }
+        a { color: #f0b429; }
+    </style>
+</head>
+<body>
+    <h1>Mastermind engine tests</h1>
+    <p class="detail">Pure assertions over <code>rules.js</code>. <a href="index.html">Back to the game</a></p>
+    <div id="summary">Running…</div>
+    <div id="results"></div>
+
+    <script src="rules.js"></script>
+    <script>
+    (function () {
+        'use strict';
+
+        var M = window.Mastermind;
+        var passed = 0;
+        var failed = 0;
+        var results = document.getElementById('results');
+
+        function report(ok, name, detail) {
+            if (ok) { passed++; } else { failed++; }
+            var row = document.createElement('div');
+            row.className = 'case';
+            row.innerHTML = '<span class="' + (ok ? 'ok' : 'bad') + '">' +
+                (ok ? 'PASS' : 'FAIL') + '</span> ' + name +
+                (detail ? ' <span class="detail">' + detail + '</span>' : '');
+            results.appendChild(row);
+            if (!ok) { console.error('FAIL: ' + name + ' ' + (detail || '')); }
+        }
+
+        function ok(name, condition, detail) {
+            report(!!condition, name, detail);
+        }
+
+        /** Assert score(guess, code) === { exact, color }. */
+        function scores(name, guess, code, exact, color) {
+            var got = M.score(guess, code);
+            report(got.exact === exact && got.color === color, name,
+                'guess [' + guess + '] vs code [' + code + '] -> ' +
+                got.exact + '/' + got.color + ', expected ' + exact + '/' + color);
+        }
+
+        /* ------------------------------------------------------- scoring -- */
+        // Colours by index: 0 R, 1 A, 2 Y, 3 G, 4 C, 5 B
+
+        scores('all wrong', [0, 0, 0, 0], [3, 3, 3, 3], 0, 0);
+        scores('perfect solve', [0, 1, 2, 3], [0, 1, 2, 3], 4, 0);
+        scores('full permutation', [0, 1, 2, 3], [3, 2, 1, 0], 0, 4);
+        scores('no duplicates, mixed', [0, 3, 5, 2], [0, 2, 5, 3], 2, 2);
+
+        // The cases a naive "is this colour present" implementation gets wrong.
+        scores('duplicates in the guess only', [0, 0, 0, 0], [0, 3, 5, 2], 1, 0);
+        scores('duplicates in the code only', [0, 3, 5, 2], [0, 0, 0, 0], 1, 0);
+        scores('duplicates on both sides', [0, 0, 3, 3], [0, 3, 3, 5], 2, 1);
+        scores('pair against a single', [0, 0, 3, 5], [0, 2, 2, 2], 1, 0);
+        scores('single against a pair', [0, 2, 2, 2], [0, 0, 3, 5], 1, 0);
+        scores('shifted duplicate pair', [1, 1, 2, 2], [2, 2, 1, 1], 0, 4);
+        scores('one exact inside a triple', [4, 4, 4, 1], [4, 1, 3, 3], 1, 1);
+
+        /* ------------------------------------------------- exhaustive 4x6 -- */
+
+        (function exhaustive() {
+            var slots = 4, colors = 6;
+            var rows = [];
+            var n = Math.pow(colors, slots);
+            var i, j, d;
+            for (i = 0; i < n; i++) {
+                var row = [];
+                var v = i;
+                for (d = 0; d < slots; d++) { row.push(v % colors); v = Math.floor(v / colors); }
+                rows.push(row);
+            }
+            report(rows.length === 1296, 'enumerated the full 4x6 space',
+                rows.length + ' codes');
+
+            var boundsOk = true, symmetryOk = true, solveOk = true, badPair = '';
+            for (i = 0; i < rows.length && boundsOk && symmetryOk && solveOk; i++) {
+                // Sample the second axis rather than run all 1.68M pairs.
+                for (j = 0; j < rows.length; j += 7) {
+                    var a = M.score(rows[i], rows[j]);
+                    var b = M.score(rows[j], rows[i]);
+                    if (a.exact < 0 || a.color < 0 || a.exact + a.color > slots) {
+                        boundsOk = false; badPair = '[' + rows[i] + '] [' + rows[j] + ']'; break;
+                    }
+                    // Scoring is symmetric in total pegs and in exact matches.
+                    if (a.exact !== b.exact || a.color !== b.color) {
+                        symmetryOk = false; badPair = '[' + rows[i] + '] [' + rows[j] + ']'; break;
+                    }
+                    if ((a.exact === slots) !== (i === j)) {
+                        solveOk = false; badPair = '[' + rows[i] + '] [' + rows[j] + ']'; break;
+                    }
+                }
+            }
+            ok('exact + colour never exceeds the peg count', boundsOk, badPair);
+            ok('scoring is symmetric', symmetryOk, badPair);
+            ok('only the true code scores all-exact', solveOk, badPair);
+        })();
+
+        /* ---------------------------------------------------------- rules -- */
+
+        ok('isComplete rejects a partial row', !M.isComplete([0, null, 2, 3], 4));
+        ok('isComplete rejects a short row', !M.isComplete([0, 1, 2], 4));
+        ok('isComplete accepts a full row', M.isComplete([0, 1, 2, 3], 4));
+        ok('isComplete accepts colour 0 in every slot',
+            M.isComplete([0, 0, 0, 0], 4), 'zero must not read as empty');
+        ok('isSolved needs every peg exact',
+            M.isSolved({ exact: 4, color: 0 }, 4) && !M.isSolved({ exact: 3, color: 1 }, 4));
+
+        /* -------------------------------------------------------- presets -- */
+
+        (function presets() {
+            var allGood = true, detail = '';
+            M.PRESET_ORDER.forEach(function (key) {
+                var p = M.PRESETS[key];
+                if (!p || p.slots < 4 || p.colors > M.COLORS.length || p.guesses < 6) {
+                    allGood = false; detail = key;
+                }
+            });
+            ok('every preset is playable with the defined colours', allGood, detail);
+            ok('classic is 4 pegs, 6 colours, 10 guesses',
+                M.PRESETS.classic.slots === 4 &&
+                M.PRESETS.classic.colors === 6 &&
+                M.PRESETS.classic.guesses === 10);
+            ok('the default difficulty is classic', M.DEFAULT_DIFFICULTY === 'classic');
+            ok('an unknown difficulty falls back to the default',
+                M.getPreset('nonsense').key === 'classic');
+        })();
+
+        /* ------------------------------------------------- code generation -- */
+
+        (function generation() {
+            var preset = M.PRESETS.classic;
+            var inRange = true, rightLength = true;
+            var seen = {};
+            for (var i = 0; i < 4000; i++) {
+                var code = M.makeCode(preset);
+                if (code.length !== preset.slots) { rightLength = false; }
+                for (var j = 0; j < code.length; j++) {
+                    if (!(code[j] >= 0 && code[j] < preset.colors && code[j] % 1 === 0)) {
+                        inRange = false;
+                    }
+                }
+                seen[code.join('')] = true;
+            }
+            ok('generated codes have the right length', rightLength);
+            ok('generated pegs stay inside the colour range', inRange);
+            ok('generation reaches a wide spread of codes',
+                Object.keys(seen).length > 900,
+                Object.keys(seen).length + ' distinct codes in 4000 draws');
+
+            var hardCode = M.makeCode(M.PRESETS.hard);
+            ok('the hard preset produces 5 pegs', hardCode.length === 5, '[' + hardCode + ']');
+        })();
+
+        /* -------------------------------------------------------- the rng -- */
+
+        (function rng() {
+            var a = M.mulberry32(12345);
+            var b = M.mulberry32(12345);
+            var same = true;
+            for (var i = 0; i < 500; i++) {
+                if (a() !== b()) { same = false; break; }
+            }
+            ok('mulberry32 is deterministic for a seed', same);
+
+            var c = M.mulberry32(12345);
+            var d = M.mulberry32(12346);
+            var differs = false;
+            for (var j = 0; j < 20; j++) {
+                if (c() !== d()) { differs = true; break; }
+            }
+            ok('different seeds diverge', differs);
+
+            var inUnit = true;
+            var e = M.mulberry32(99);
+            for (var k = 0; k < 5000; k++) {
+                var v = e();
+                if (!(v >= 0 && v < 1)) { inUnit = false; break; }
+            }
+            ok('mulberry32 stays in [0, 1)', inUnit);
+
+            ok('hashString is stable',
+                M.hashString('2026-08-29:classic') === M.hashString('2026-08-29:classic'));
+            ok('hashString separates similar strings',
+                M.hashString('2026-08-29:classic') !== M.hashString('2026-08-30:classic'));
+        })();
+
+        /* --------------------------------------------------------- daily -- */
+
+        (function daily() {
+            ok('todayKey is UTC yyyy-mm-dd',
+                /^\d{4}-\d{2}-\d{2}$/.test(M.todayKey()), M.todayKey());
+            ok('todayKey reads a given date in UTC',
+                M.todayKey(new Date(Date.UTC(2026, 0, 5))) === '2026-01-05');
+
+            var one = M.dailyCode('2026-08-29', 'classic');
+            var two = M.dailyCode('2026-08-29', 'classic');
+            ok('the daily code is reproducible', one.join() === two.join(), '[' + one + ']');
+
+            var other = M.dailyCode('2026-08-30', 'classic');
+            ok('a different day gives a different code', one.join() !== other.join(),
+                '[' + one + '] vs [' + other + ']');
+
+            var harder = M.dailyCode('2026-08-29', 'hard');
+            ok('a different difficulty gives its own code',
+                harder.length === 5 && one.join() !== harder.join(), '[' + harder + ']');
+
+            // Across a year of dates the seeding must not collapse onto a few codes.
+            var codes = {};
+            var base = Date.UTC(2026, 0, 1);
+            for (var i = 0; i < 365; i++) {
+                codes[M.dailyCode(M.todayKey(new Date(base + i * 86400000)), 'classic').join('')] = true;
+            }
+            ok('a year of daily codes is well spread',
+                Object.keys(codes).length > 300,
+                Object.keys(codes).length + ' distinct codes in 365 days');
+
+            ok('previousDayKey steps back one day',
+                M.previousDayKey('2026-03-01') === '2026-02-28', M.previousDayKey('2026-03-01'));
+            ok('previousDayKey handles a leap day',
+                M.previousDayKey('2028-03-01') === '2028-02-29', M.previousDayKey('2028-03-01'));
+            ok('previousDayKey crosses a year boundary',
+                M.previousDayKey('2026-01-01') === '2025-12-31');
+
+            ok('dailyNumber counts up by one a day',
+                M.dailyNumber('2024-01-02') - M.dailyNumber('2024-01-01') === 1);
+            ok('dailyNumber starts at 1', M.dailyNumber('2024-01-01') === 1);
+        })();
+
+        /* --------------------------------------------------------- colours -- */
+
+        (function colours() {
+            var uniqueHex = {}, uniqueGlyph = {}, indexOk = true;
+            M.COLORS.forEach(function (c, i) {
+                uniqueHex[c.hex] = true;
+                uniqueGlyph[c.glyph] = true;
+                if (c.id !== i) { indexOk = false; }
+            });
+            ok('eight colours are defined', M.COLORS.length === 8);
+            ok('colour ids match their position', indexOk);
+            ok('every colour has a distinct hex', Object.keys(uniqueHex).length === M.COLORS.length);
+            ok('every colour has a distinct glyph', Object.keys(uniqueGlyph).length === M.COLORS.length);
+        })();
+
+        /* -------------------------------------------------------- summary -- */
+
+        var summary = document.getElementById('summary');
+        summary.textContent = passed + ' passed, ' + failed + ' failed';
+        summary.className = failed ? 'fail' : 'pass';
+        window.__testResults = { passed: passed, failed: failed };
+        console.log('Mastermind tests: ' + passed + ' passed, ' + failed + ' failed');
+    })();
+    </script>
+</body>
+</html>
