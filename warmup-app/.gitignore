@@ -1,0 +1,8 @@
+# Secrets and local state. Reports are intentionally NOT ignored -- committing
+# them gives you a readable day-over-day history of placement in git.
+.env
+data/
+screenshots/
+__pycache__/
+*.pyc
+.pytest_cache/
