@@ -1,3 +1,6 @@
 __pycache__/
 *.pyc
 *.pyo
+
+# Personal Claude Code overrides (not for the team repo)
+.claude/settings.local.json
