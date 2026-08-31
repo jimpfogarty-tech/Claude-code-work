@@ -624,27 +624,37 @@
 
     /* ------------------------------------------------------------- share -- */
 
+    /**
+     * The share block, spoiler-free -- it carries how close each guess landed,
+     * never which colours were involved.
+     *
+     * Rows are numbered so the guess count is countable at a glance rather than
+     * inferred from the height of a block of emoji.
+     */
     function buildShareText() {
-        var header = state.mode === 'daily'
-            ? 'Fogarty Mastermind - Daily #' + M.dailyNumber(state.dateKey)
-            : 'Fogarty Mastermind';
-        var line = (state.won ? state.rows.length : 'X') + '/' + state.preset.guesses +
-            ' - ' + state.preset.label;
+        var header = 'Fogarty Mastermind';
+        if (state.mode === 'daily') {
+            header += ' · Daily #' + M.dailyNumber(state.dateKey);
+        }
+        header += ' — ' + (state.won ? state.rows.length : 'X') + '/' + state.preset.guesses;
+        // Classic is the default board, so naming it adds nothing.
+        if (state.difficulty !== M.DEFAULT_DIFFICULTY) {
+            header += ' ' + state.preset.label;
+        }
 
+        // Right-align the numbers so the emoji columns still tile once a game
+        // runs past nine guesses. A plain space, not U+2007 -- several chat
+        // clients mangle the figure space.
+        var width = String(state.rows.length).length;
         var grid = [];
         for (var i = 0; i < state.rows.length; i++) {
-            var r = state.rows[i].result;
-            var row = '';
-            for (var k = 0; k < state.preset.slots; k++) {
-                if (k < r.exact) { row += '🔴'; }          // red circle - exact
-                else if (k < r.exact + r.color) { row += '⚪'; } // white circle - colour only
-                else { row += '⬛'; }                            // black square - no match
-            }
-            grid.push(row);
+            var num = String(i + 1);
+            while (num.length < width) { num = ' ' + num; }
+            grid.push(num + ' ' + M.shareRow(state.rows[i].result, state.preset.slots));
         }
 
         var url = location.origin + location.pathname;
-        return header + '\n' + line + '\n\n' + grid.join('\n') + '\n\n' + url;
+        return header + '\n\n' + grid.join('\n') + '\n\n' + url;
     }
 
     function copyShare() {
