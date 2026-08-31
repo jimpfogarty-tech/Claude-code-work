@@ -91,6 +91,35 @@
         return result.exact === slots;
     }
 
+    /* ---------------------------------------------------------------- share */
+
+    // Wordle's vocabulary, because players already hold it.
+    var SHARE_EXACT = '🟩'; // green square  - right colour, right slot
+    var SHARE_COLOR = '🟨'; // yellow square - right colour, wrong slot
+    var SHARE_NONE = '⬛'; // black square  - no match
+
+    /**
+     * One row of the share grid, always exactly `slots` symbols long.
+     *
+     * Greens first, then yellows, then blanks -- the same canonical order the
+     * board renders key pegs in. That ordering is what makes the grid read as
+     * progress: green accumulates from the left as a guess closes in, and the
+     * solved row is a solid green bar.
+     */
+    function shareRow(result, slots) {
+        var row = '';
+        for (var i = 0; i < slots; i++) {
+            if (i < result.exact) {
+                row += SHARE_EXACT;
+            } else if (i < result.exact + result.color) {
+                row += SHARE_COLOR;
+            } else {
+                row += SHARE_NONE;
+            }
+        }
+        return row;
+    }
+
     /* ------------------------------------------------------------------ rng */
 
     /** mulberry32 -- small, fast, deterministic. Returns a () => [0,1) function. */
@@ -184,6 +213,10 @@
         score: score,
         isComplete: isComplete,
         isSolved: isSolved,
+        shareRow: shareRow,
+        SHARE_EXACT: SHARE_EXACT,
+        SHARE_COLOR: SHARE_COLOR,
+        SHARE_NONE: SHARE_NONE,
         mulberry32: mulberry32,
         hashString: hashString,
         systemRandom: systemRandom,

@@ -249,6 +249,53 @@
             ok('dailyNumber starts at 1', M.dailyNumber('2024-01-01') === 1);
         })();
 
+        /* ----------------------------------------------------------- share -- */
+
+        (function share() {
+            var G = M.SHARE_EXACT, Y = M.SHARE_COLOR, B = M.SHARE_NONE;
+
+            function row(exact, color, slots) {
+                return M.shareRow({ exact: exact, color: color }, slots);
+            }
+
+            report(row(4, 0, 4) === G + G + G + G, 'a solved row is all green', row(4, 0, 4));
+            report(row(0, 0, 4) === B + B + B + B, 'a blank row is all black', row(0, 0, 4));
+            report(row(2, 1, 4) === G + G + Y + B, '2 exact + 1 colour reads green green yellow black', row(2, 1, 4));
+            report(row(0, 4, 4) === Y + Y + Y + Y, 'all-misplaced reads all yellow', row(0, 4, 4));
+            report(row(5, 0, 5) === G + G + G + G + G, 'a solved 5-peg row is all green', row(5, 0, 5));
+
+            // Every reachable (exact, colour) pair on both board widths.
+            var lengthOk = true, orderOk = true, detail = '';
+            [4, 5].forEach(function (slots) {
+                for (var e = 0; e <= slots; e++) {
+                    for (var c = 0; e + c <= slots; c++) {
+                        var s = row(e, c, slots);
+                        // Emoji are surrogate pairs, so count code points, not UTF-16 units.
+                        var symbols = Array.from(s);
+                        if (symbols.length !== slots) {
+                            lengthOk = false; detail = e + '/' + c + ' on ' + slots + ' -> ' + symbols.length;
+                        }
+                        // Greens first, then yellows, then blacks -- no green may
+                        // follow a yellow, or the grid stops reading as progress.
+                        var seenSoft = false;
+                        for (var i = 0; i < symbols.length; i++) {
+                            if (symbols[i] !== G) { seenSoft = true; }
+                            else if (seenSoft) { orderOk = false; detail = s; }
+                        }
+                    }
+                }
+            });
+            ok('every row is exactly one symbol per peg', lengthOk, detail);
+            ok('greens always come first, so the grid reads as progress', orderOk, detail);
+
+            // The grid must never let a reader reconstruct the code.
+            var leaks = false;
+            M.COLORS.forEach(function (colour) {
+                if (row(2, 1, 4).indexOf(colour.glyph) !== -1) { leaks = true; }
+            });
+            ok('a share row carries no colour information', !leaks);
+        })();
+
         /* --------------------------------------------------------- colours -- */
 
         (function colours() {
