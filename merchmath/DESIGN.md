@@ -43,14 +43,15 @@ floor.
    quantity when the verdict is Reorder.
 5. Save the verdict or run a what-if markdown.
 
-**Items** collects everything assessed, grouped by verdict and
-filterable. The Home screen surfaces the items that need a decision and
-the most recent math.
+**Items** is the third tab: everything assessed, grouped by verdict and
+filterable. The Assess and Verdict screens live under it. The Home
+screen surfaces the items that need a decision and the most recent
+math.
 
 **Setup** holds target IMU by class, freight and duty defaults, the
 promo IMU floor, season length, and the plain-language verdict rules.
-**Formulas** shows every calculation the app uses so a merchant can
-trust the numbers.
+**Formulas**, reached from the book icon on Setup, shows every
+calculation the app uses so a merchant can trust the numbers.
 
 ## Verdict rules (defaults, editable in Setup)
 
@@ -73,7 +74,8 @@ trust the numbers.
 | Weeks of supply        | On hand ÷ Rate of sale                                   |
 | Maintained markup      | (AUR − Landed) ÷ AUR                                     |
 | GMROI                  | Gross margin $ ÷ Average inventory at cost               |
-| Suggested reorder      | Uncovered weeks × rate of sale, rounded to case pack     |
+| AUR vs ticket          | AUR ÷ Original retail                                    |
+| Suggested reorder      | Uncovered weeks × rate of sale, rounded up to case pack  |
 
 ## Visual direction: paper ledger
 
@@ -85,7 +87,9 @@ trust the numbers.
 - Inputs are right-aligned numeric fields with a hairline underline;
   computed rows sit on the paper tint so entered and derived values
   read differently.
-- Hit targets are at least 44 px. No painted status bar or keyboard.
+- Tab bar: Home, New item, Items, Setup.
+- Hit targets are at least 44 px. No painted status bar or fake system
+  keyboard (Alt B's in-app numeric pad is its own design element).
 
 ## Screens on the canvas
 
@@ -100,7 +104,7 @@ trust the numbers.
 | `Setup.dc.html`     | Setup                     |
 | `Formulas.dc.html`  | Formulas                  |
 | `AltLedger.dc.html` | Alternate A, low-fi: one dense ledger grid |
-| `AltGuided.dc.html` | Alternate B, low-fi: one question per screen |
+| `AltGuided.dc.html` | Alternate B, low-fi: one question at a time |
 
 Sample values on the screens are illustrative. Duty rates, class targets
 and the season calendar come from the merchant's own setup.

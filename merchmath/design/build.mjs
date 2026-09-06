@@ -62,7 +62,7 @@ const tabbar = (active) => {
   const items = [
     ['home', 'Home', I.home],
     ['new', 'New item', I.tag],
-    ['assess', 'Assess', I.chart],
+    ['items', 'Items', I.chart],
     ['setup', 'Setup', I.sliders],
   ];
   return `<div style="${s({ display: 'flex', 'flex-direction': 'row', 'justify-content': 'space-around', 'align-items': 'flex-start', padding: '10px 8px 28px', 'border-top': `1px solid ${T.line}`, background: T.surface, 'flex-shrink': '0' })}">
@@ -71,10 +71,12 @@ ${items.map(([k, label, icon]) => `      <div style="${s({ display: 'flex', 'fle
 };
 
 const header = ({ title, eyebrow, back, action }) => `<div style="${s({ display: 'flex', 'flex-direction': 'column', gap: '6px', padding: '58px 20px 14px', 'flex-shrink': '0' })}">
-      ${back ? `<div style="${s({ display: 'flex', 'flex-direction': 'row', 'align-items': 'center', 'justify-content': 'space-between', 'min-height': '44px', 'margin-left': '-8px' })}"><div style="${s({ display: 'flex', 'flex-direction': 'row', 'align-items': 'center', gap: '2px', color: T.accent, 'font-weight': '500', 'font-size': '15px' })}">${I.back}<span>${back}</span></div>${action || '<span></span>'}</div>` : ''}
+      ${back ? `<div style="${s({ display: 'flex', 'flex-direction': 'row', 'align-items': 'center', 'justify-content': 'space-between', 'min-height': '44px', margin: '0 -12px 0 -8px' })}"><div style="${s({ display: 'flex', 'flex-direction': 'row', 'align-items': 'center', gap: '2px', 'min-height': '44px', 'padding-right': '8px', color: T.accent, 'font-weight': '500', 'font-size': '15px' })}">${I.back}<span>${back}</span></div>${action || '<span></span>'}</div>` : ''}
       ${eyebrow ? `<div style="${s({ 'font-size': '12px', 'font-weight': '600', 'letter-spacing': '0.08em', 'text-transform': 'uppercase', color: T.muted })}">${eyebrow}</div>` : ''}
-      <div style="${s({ 'font-family': T.serif, 'font-size': '34px', 'line-height': '1.05', 'font-weight': '400', 'letter-spacing': '-0.01em' })}">${title}</div>
+      <div style="${s({ display: 'flex', 'flex-direction': 'row', 'align-items': 'center', 'justify-content': 'space-between', gap: '12px', 'margin-right': '-12px' })}"><div style="${s({ 'font-family': T.serif, 'font-size': '34px', 'line-height': '1.05', 'font-weight': '400', 'letter-spacing': '-0.01em' })}">${title}</div>${!back && action ? action : ''}</div>
     </div>`;
+
+const iconBtn = (icon) => `<div style="${s({ display: 'flex', 'align-items': 'center', 'justify-content': 'center', width: '44px', height: '44px', color: T.faint })}">${icon}</div>`;
 
 const screen = ({ head, body, tab, foot }) => `<div style="${s({ width: `${W}px`, height: `${H}px`, display: 'flex', 'flex-direction': 'column', background: T.bg, overflow: 'hidden', position: 'relative' })}">
     ${head}
@@ -91,7 +93,7 @@ const card = (inner, extra = {}) => `<div style="${s({ display: 'flex', 'flex-di
 ${inner}
 </div>`;
 
-const sectionLabel = (t, right = '') => `<div style="${s({ display: 'flex', 'flex-direction': 'row', 'justify-content': 'space-between', 'align-items': 'baseline', padding: '4px 2px 0' })}"><span style="${s({ 'font-size': '12px', 'font-weight': '600', 'letter-spacing': '0.08em', 'text-transform': 'uppercase', color: T.muted })}">${t}</span>${right ? `<span style="${s({ 'font-size': '13px', color: T.accent, 'font-weight': '500' })}">${right}</span>` : ''}</div>`;
+const sectionLabel = (t, right = '') => `<div style="${s({ display: 'flex', 'flex-direction': 'row', 'justify-content': 'space-between', 'align-items': 'baseline', padding: '4px 2px 0' })}"><span style="${s({ 'font-size': '12px', 'font-weight': '600', 'letter-spacing': '0.08em', 'text-transform': 'uppercase', color: T.muted })}">${t}</span>${right ? `<span style="${s({ display: 'inline-flex', 'align-items': 'center', 'min-height': '44px', margin: '-14px 0', 'font-size': '13px', color: T.accent, 'font-weight': '500' })}">${right}</span>` : ''}</div>`;
 
 // Input row: label left, value right (as if a numeric field)
 const field = ({ label, value, unit, hint, computed, text, last }) => `<div style="${s({ display: 'flex', 'flex-direction': 'row', 'align-items': 'center', 'justify-content': 'space-between', gap: '12px', 'min-height': '46px', padding: '5px 16px', 'border-bottom': last ? 'none' : `1px solid ${T.line}`, background: computed ? T.bg : 'transparent', 'flex-shrink': '0' })}">
@@ -108,11 +110,11 @@ const pill = (text, tone) => {
 const button = (label, { primary = true, icon = '' } = {}) => `<div style="${s({ display: 'flex', 'flex-direction': 'row', 'align-items': 'center', 'justify-content': 'center', gap: '8px', 'min-height': '50px', 'border-radius': '12px', background: primary ? T.ink : 'transparent', color: primary ? '#ffffff' : T.ink, border: primary ? 'none' : `1.5px solid ${T.lineStrong}`, 'font-weight': '600', 'font-size': '16px', 'flex-grow': '1' })}">${icon}<span>${label}</span></div>`;
 
 const segmented = (opts, active) => `<div style="${s({ display: 'flex', 'flex-direction': 'row', gap: '4px', padding: '4px', background: '#ecE7df', 'border-radius': '10px' })}">
-${opts.map((o) => `    <div style="${s({ 'flex-grow': '1', 'text-align': 'center', 'min-height': '36px', 'line-height': '36px', 'border-radius': '8px', 'font-size': '14px', 'font-weight': o === active ? '600' : '500', background: o === active ? T.surface : 'transparent', color: o === active ? T.ink : T.muted, 'box-shadow': o === active ? '0 1px 2px rgba(27,26,23,0.08)' : 'none' })}">${o}</div>`).join('\n')}
+${opts.map((o) => `    <div style="${s({ 'flex-grow': '1', 'text-align': 'center', 'min-height': '40px', 'line-height': '40px', 'border-radius': '8px', 'font-size': '14px', 'font-weight': o === active ? '600' : '500', background: o === active ? T.surface : 'transparent', color: o === active ? T.ink : T.muted, 'box-shadow': o === active ? '0 1px 2px rgba(27,26,23,0.08)' : 'none' })}">${o}</div>`).join('\n')}
 </div>`;
 
 const chips = (items, active) => `<div style="${s({ display: 'flex', 'flex-direction': 'row', gap: '8px', 'flex-wrap': 'wrap' })}">
-${items.map((c) => `    <span style="${s({ padding: '8px 12px', 'min-height': '36px', 'border-radius': '999px', border: `1.5px solid ${c === active ? T.ink : T.lineStrong}`, background: c === active ? T.ink : 'transparent', color: c === active ? '#ffffff' : T.ink, 'font-size': '13px', 'font-weight': '500', 'white-space': 'nowrap' })}">${c}</span>`).join('\n')}
+${items.map((c) => `    <span style="${s({ padding: '0 14px', 'min-height': '44px', display: 'inline-flex', 'align-items': 'center', 'border-radius': '999px', border: `1.5px solid ${c === active ? T.ink : T.lineStrong}`, background: c === active ? T.ink : 'transparent', color: c === active ? '#ffffff' : T.ink, 'font-size': '13px', 'font-weight': '500', 'white-space': 'nowrap' })}">${c}</span>`).join('\n')}
 </div>`;
 
 const itemRow = ({ name, style, metric, pill: p, last }) => `<div style="${s({ display: 'flex', 'flex-direction': 'row', 'align-items': 'center', 'justify-content': 'space-between', gap: '12px', padding: '12px 16px', 'min-height': '64px', 'border-bottom': last ? 'none' : `1px solid ${T.line}` })}">
@@ -174,7 +176,7 @@ ${itemRow({ name: 'Faux-leather moto jacket', style: '41790', metric: '$129.00 �
 
 // 2. New item inputs
 screens.NewItem = screen({
-  head: header({ back: 'Today', title: 'New item', action: `<span style="${s({ color: T.faint })}">${I.book}</span>` }),
+  head: header({ back: 'Today', title: 'New item', action: iconBtn(I.book) }),
   tab: 'new',
   body: `
     ${card(`
@@ -186,7 +188,7 @@ ${itemRow({ name: 'Ponte wide-leg trouser', style: 'Women’s Bottoms', metric: 
     ${card(`
 ${field({ label: 'FOB cost', value: '14.20', unit: { pre: '$' } })}
 ${field({ label: 'Freight', value: '6.0', unit: { post: '%' }, hint: '$0.85 per unit' })}
-${field({ label: 'Duty', value: '16.0', unit: { post: '%' }, hint: '$2.27 · HTS 6204.63' })}
+${field({ label: 'Duty', value: '16.0', unit: { post: '%' }, hint: '$2.27 · override by HTS' })}
 ${field({ label: 'Landed cost', value: '$17.32', computed: true, last: true })}
     `)}
     ${sectionLabel('Retail')}
@@ -204,7 +206,7 @@ ${field({ label: 'Ticket price', value: '59.50', unit: { pre: '$' }, last: true 
 const ladderRow = (retail, imu, mmu, active, last) => `<div style="${s({ display: 'grid', 'grid-template-columns': 'repeat(3, minmax(0, 1fr))', gap: '8px', padding: '11px 16px', 'border-bottom': last ? 'none' : `1px solid ${T.line}`, background: active ? T.bg : 'transparent', 'font-weight': active ? '600' : '400' })}"><span>${retail}</span><span style="${s({ 'text-align': 'right' })}">${imu}</span><span style="${s({ 'text-align': 'right', color: T.muted })}">${mmu}</span></div>`;
 
 screens.NewItemResult = screen({
-  head: header({ back: 'New item', title: 'Ponte wide-leg trouser', action: `<span style="${s({ color: T.faint })}">${I.share}</span>` }),
+  head: header({ back: 'New item', title: 'Ponte wide-leg trouser', action: iconBtn(I.share) }),
   tab: 'new',
   body: `
     <div style="${s({ display: 'flex', 'flex-direction': 'row', 'align-items': 'flex-end', 'justify-content': 'space-between', gap: '12px' })}">
@@ -236,8 +238,8 @@ ${ladderRow('$64.50', '73.1%', '61.6%', false, true)}
 
 // 4. Assess inputs
 screens.Assess = screen({
-  head: header({ back: 'Today', title: 'Assess item', action: `<span style="${s({ color: T.faint })}">${I.scan}</span>` }),
-  tab: 'assess',
+  head: header({ back: 'Today', title: 'Assess item', action: iconBtn(I.scan) }),
+  tab: 'items',
   body: `
     ${card(`
 ${itemRow({ name: 'Linen-blend camp shirt', style: '30177', metric: 'Women’s Tops', pill: '', last: true })}
@@ -264,8 +266,8 @@ ${field({ label: 'Weeks left in season', value: '6', last: true })}
 const wk = (n, tone) => `<div style="${s({ display: 'flex', 'flex-direction': 'column', 'align-items': 'center', gap: '4px', 'flex-grow': '1' })}"><div style="${s({ width: '100%', height: '28px', 'border-radius': '4px', background: tone === 'sold' ? T.lineStrong : tone === 'cover' ? T.accent : tone === 'gap' ? T.negTint : T.line, border: tone === 'gap' ? `1px dashed ${T.neg}` : 'none' })}"></div><span style="${s({ 'font-size': '10px', color: T.faint })}">${n}</span></div>`;
 
 screens.Verdict = screen({
-  head: header({ back: 'Assess', title: 'Linen-blend camp shirt', action: `<span style="${s({ color: T.faint })}">${I.share}</span>` }),
-  tab: 'assess',
+  head: header({ back: 'Assess', title: 'Linen-blend camp shirt', action: iconBtn(I.share) }),
+  tab: 'items',
   body: `
     <div style="${s({ display: 'flex', 'flex-direction': 'row', 'align-items': 'center', gap: '14px', padding: '16px', background: T.accentTint, border: '1px solid #c9e2d6', 'border-radius': '14px' })}">
       <div style="${s({ display: 'flex', 'align-items': 'center', 'justify-content': 'center', width: '44px', height: '44px', 'border-radius': '22px', background: T.accent, color: '#ffffff', 'flex-shrink': '0' })}">${I.check}</div>
@@ -275,7 +277,7 @@ screens.Verdict = screen({
       ${stat({ label: 'Sell-through', value: '65%', sub: 'wk 8 of 14', tone: 'good' })}
       ${stat({ label: 'Rate of sale', value: '195', sub: 'units / wk' })}
       ${stat({ label: 'WOS', value: '4.3', sub: '6 wks left' })}
-      ${stat({ label: 'Maintained MU', value: '70.2%', sub: 'IMU 73.5%' })}
+      ${stat({ label: 'MMU', value: '70.2%', sub: 'IMU 73.5%' })}
       ${stat({ label: 'AUR vs ticket', value: '89%', sub: '$39.60' })}
       ${stat({ label: 'GMROI', value: '2.3', sub: 'to date' })}
     </div>
@@ -289,15 +291,15 @@ screens.Verdict = screen({
 </div>
     `)}
   `,
-  foot: `<div style="${s({ display: 'flex', 'flex-direction': 'row', gap: '10px', margin: '0 20px 12px' })}">${button('Save verdict')}${button('What if 25% off', { primary: false })}</div>`,
+  foot: `<div style="${s({ display: 'flex', 'flex-direction': 'row', gap: '10px', margin: '0 20px 12px' })}">${button('Save verdict')}${button('Try 25% off', { primary: false })}</div>`,
 });
 
 // 6. Items list
 screens.Items = screen({
-  head: header({ back: 'Today', title: 'Items', action: `<span style="${s({ color: T.faint })}">${I.search}</span>` }),
-  tab: 'assess',
+  head: header({ title: 'Items', action: iconBtn(I.search) }),
+  tab: 'items',
   body: `
-    ${chips(['All', 'Reorder 3', 'Hold 6', 'Markdown 5'], 'All')}
+    ${chips(['All', 'Reorder', 'Hold', 'Markdown'], 'All')}
     ${sectionLabel('Markdown candidates')}
     ${card(`
 ${itemRow({ name: 'Textured knit cardigan', style: '30244', metric: 'ST 28% · WOS 11.4', pill: pill('Markdown', 'bad') })}
@@ -306,7 +308,7 @@ ${itemRow({ name: 'Pleated midi skirt', style: '41655', metric: 'ST 31% · WOS 9
     ${sectionLabel('Reorder')}
     ${card(`
 ${itemRow({ name: 'Linen-blend camp shirt', style: '30177', metric: 'ST 65% · WOS 4.3', pill: pill('Reorder', 'good') })}
-${itemRow({ name: 'Ponte wide-leg trouser', style: '41822', metric: 'ST 58% · WOS 5.1', pill: pill('Reorder', 'good'), last: true })}
+${itemRow({ name: 'Rib-knit henley', style: '30301', metric: 'ST 58% · WOS 5.1', pill: pill('Reorder', 'good'), last: true })}
     `)}
     ${sectionLabel('Hold')}
     ${card(`
@@ -320,14 +322,15 @@ ${itemRow({ name: 'Utility cargo pant', style: '41901', metric: 'ST 44% · WOS 6
 const targetRow = (cls, target, last) => `<div style="${s({ display: 'flex', 'flex-direction': 'row', 'justify-content': 'space-between', 'align-items': 'center', padding: '12px 16px', 'min-height': '48px', 'border-bottom': last ? 'none' : `1px solid ${T.line}` })}"><span>${cls}</span><span style="${s({ 'font-weight': '600', 'font-size': '16px' })}">${target}</span></div>`;
 
 screens.Setup = screen({
-  head: header({ title: 'Setup' }),
+  head: header({ title: 'Setup', action: iconBtn(I.book) }),
   tab: 'setup',
   body: `
     ${sectionLabel('Target IMU by class', 'Edit')}
     ${card(`
 ${targetRow('Women’s Tops', '66%')}
 ${targetRow('Women’s Bottoms', '68%')}
-${targetRow('Dresses', '70%', true)}
+${targetRow('Dresses', '70%')}
+${targetRow('Outerwear', '62%', true)}
     `)}
     ${sectionLabel('Assumptions')}
     ${card(`
@@ -338,11 +341,8 @@ ${field({ label: 'Season length', value: '14', unit: { post: 'wks' }, last: true
     `)}
     ${sectionLabel('Verdict rules')}
     ${card(`
-${field({ label: 'Reorder when', value: 'WOS < weeks left', hint: 'and sell-through above 50%' })}
-${field({ label: 'Markdown when', value: 'WOS > weeks left', hint: 'by 2 or more weeks', last: true })}
-    `)}
-    ${card(`
-<div style="${s({ display: 'flex', 'flex-direction': 'row', 'align-items': 'center', 'justify-content': 'space-between', padding: '10px 16px', 'min-height': '48px' })}"><div style="${s({ display: 'flex', 'flex-direction': 'row', 'align-items': 'center', gap: '10px' })}"><span style="${s({ color: T.accent })}">${I.book}</span><span style="${s({ 'font-weight': '500' })}">Formula reference</span></div><span style="${s({ color: T.faint })}">${I.chev}</span></div>
+${field({ label: 'Reorder when', value: 'WOS &lt; weeks left', hint: 'and ST above 50%', text: true })}
+${field({ label: 'Markdown when', value: 'WOS &gt; weeks left', hint: 'by 2 or more weeks', text: true, last: true })}
     `)}
   `,
 });
@@ -367,7 +367,9 @@ ${formula('Sell-through %', 'Sold ÷ Received')}
 ${formula('Rate of sale', 'Sold ÷ Weeks on floor')}
 ${formula('Weeks of supply', 'On hand ÷ Rate of sale')}
 ${formula('Maintained markup', '(AUR − Landed) ÷ AUR')}
-${formula('GMROI', 'Gross margin $ ÷ Average inventory at cost', 'Average inventory = (Received + On hand) ÷ 2 × Landed', true)}
+${formula('AUR vs ticket', 'AUR ÷ Original retail')}
+${formula('GMROI', 'Gross margin $ ÷ Average inventory at cost', 'Average inventory = (Received + On hand) ÷ 2 × Landed')}
+${formula('Suggested reorder', 'Uncovered weeks × Rate of sale', 'Rounded up to case pack', true)}
     `)}
   `,
 });
@@ -415,10 +417,10 @@ ${gridRow('41790', '51.20', '129.00', '60.3')}
 ${gridRow('41655', '12.10', '39.50', '69.4')}
 ${gridRow('+ add row', '', '', '')}
   </div>
-  <div style="${s({ display: 'grid', 'grid-template-columns': 'repeat(3, minmax(0, 1fr))', gap: '8px' })}">${box('Σ IMU 68.8%', 56)}${box('Σ units 6,400', 56)}${box('Σ margin $', 56)}</div>
+  <div style="${s({ display: 'grid', 'grid-template-columns': 'repeat(3, minmax(0, 1fr))', gap: '8px' })}">${box('IMU 64.6%', 56)}${box('3 styles', 56)}${box('Markup $147.38', 56)}</div>
   ${box('Swipe a row → assess it', 44, { 'border-style': 'dashed' })}
   <div style="${s({ display: 'flex', 'flex-direction': 'column', gap: '8px', padding: '12px', border: '2px solid #555', 'border-radius': '6px', 'margin-top': 'auto' })}">
-    <div style="${s({ 'font-weight': '700' })}">41822 · Ponte wide-leg trouser</div>
+    <div style="${s({ 'font-weight': '700' })}">30301 · Rib-knit henley</div>
     <div style="${s({ display: 'grid', 'grid-template-columns': 'repeat(3, minmax(0, 1fr))', gap: '8px' })}">${box('ST 58%', 48)}${box('WOS 5.1', 48)}${box('Reorder', 48, { background: '#dfeee7' })}</div>
     ${box('Row detail drawer slides up over the sheet', 36, { 'border-style': 'dashed', 'font-size': '14px' })}
   </div>
@@ -449,12 +451,12 @@ const canvas = {
   artboards: [
     ...order.map((k, i) => ({ file: `${k}.dc.html`, title: titles[k], x: i * (W + GAP), y: 0, w: W, h: H, page: 'page-1' })),
     { file: 'AltLedger.dc.html', title: 'Alt A · Ledger grid', x: 0, y: 0, w: W, h: H, page: 'page-2' },
-    { file: 'AltGuided.dc.html', title: 'Alt B · Guided', x: W + GAP, y: 0, w: W, h: H, page: 'page-2' },
+    { file: 'AltGuided.dc.html', title: 'Alt B · One question at a time', x: W + GAP, y: 0, w: W, h: H, page: 'page-2' },
   ],
   annotations: [
     { id: 'flow', x: 0, y: -260, w: 520, page: 'page-1', text: 'MerchMath — flow\n\nHome → New item (inputs) → New item math (IMU, price ladder, promo depth) → Save to Items\nHome → Assess item (inputs) → Verdict (sell-through, WOS, GMROI, coverage, reorder qty) → Save\nSetup holds target IMU by class, freight/duty defaults, promo floor, and the verdict rules. Formulas shows every calculation the app uses.\n\nSample values are illustrative: duty rates, class targets and the season calendar come from the merchant\'s own setup.' },
     { id: 'direction', x: 1000, y: -260, w: 460, page: 'page-1', text: 'Direction: paper ledger\n\nWarm paper ground, ink type, one green accent reserved for margin and go decisions. Serif only for screen titles and the one big number per screen; IBM Plex Sans with tabular figures everywhere numbers line up.\n\nStatic mockups. The live result strip on New item and the verdict banner are the two moments the app should feel instant.' },
-    { id: 'alts', x: 0, y: -200, w: 520, page: 'page-2', text: 'Two directions not taken, kept for comparison. Alt A trades one-handed use for density; Alt B trades speed for hand-holding. The main direction sits between them: one form per task, live result pinned at the bottom.' },
+    { id: 'alts', x: 0, y: -200, w: 520, page: 'page-2', text: 'Two directions not taken, kept for comparison. Alt A trades one-handed use for density; Alt B trades speed for hand-holding, and its painted keypad is deliberate: an in-app numeric pad, not a fake system keyboard. The main direction sits between them: one form per task, live result pinned at the bottom.' },
   ],
   launch: { view: 'canvas', page: 'page-1' },
 };

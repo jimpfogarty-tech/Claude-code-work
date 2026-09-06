@@ -93,7 +93,7 @@
     },
     {
       "file": "AltGuided.dc.html",
-      "title": "Alt B · Guided",
+      "title": "Alt B · One question at a time",
       "x": 500,
       "y": 0,
       "w": 390,
@@ -124,7 +124,7 @@
       "y": -200,
       "w": 520,
       "page": "page-2",
-      "text": "Two directions not taken, kept for comparison. Alt A trades one-handed use for density; Alt B trades speed for hand-holding. The main direction sits between them: one form per task, live result pinned at the bottom."
+      "text": "Two directions not taken, kept for comparison. Alt A trades one-handed use for density; Alt B trades speed for hand-holding, and its painted keypad is deliberate: an in-app numeric pad, not a fake system keyboard. The main direction sits between them: one form per task, live result pinned at the bottom."
     }
   ],
   "launch": {
