@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&amp;family=Instrument+Serif&amp;display=swap">
+  <style>
+    body { margin: 0; background: #f6f3ee; color: #1b1a17; font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif; font-size: 15px; line-height: 1.4; -webkit-font-smoothing: antialiased; font-variant-numeric: tabular-nums; }
+    a { color: #1f7a5c; } a:hover { color: #145843; }
+    * { box-sizing: border-box; }
+  </style>
+</helmet>
+<div style="width: 390px; height: 844px; display: flex; flex-direction: column; background: #f6f3ee; overflow: hidden; position: relative">
+    <div style="display: flex; flex-direction: column; gap: 6px; padding: 58px 20px 14px; flex-shrink: 0">
+      <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between; min-height: 44px; margin-left: -8px"><div style="display: flex; flex-direction: row; align-items: center; gap: 2px; color: #1f7a5c; font-weight: 500; font-size: 15px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 6 8.5 12l6 6"></path></svg><span>Setup</span></div><span></span></div>
+      
+      <div style="font-family: 'Instrument Serif', Georgia, 'Times New Roman', serif; font-size: 34px; line-height: 1.05; font-weight: 400; letter-spacing: -0.01em">Formulas</div>
+    </div>
+    <div style="display: flex; flex-direction: column; flex-grow: 1; overflow: hidden">
+      <div style="display: flex; flex-direction: column; gap: 12px; padding: 4px 20px 12px; flex-shrink: 0">
+
+    <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: baseline; padding: 4px 2px 0"><span style="font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #6b665c">Pricing</span></div>
+    <div style="display: flex; flex-direction: column; background: #ffffff; border: 1px solid #e4dfd6; border-radius: 14px; overflow: hidden">
+
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 12px 16px; border-bottom: 1px solid #e4dfd6"><span style="font-weight: 600">Landed cost</span><span style="font-family: 'IBM Plex Mono', Menlo, Consolas, monospace; font-size: 13px; color: #145843">FOB + freight + duty</span><span style="font-size: 12px; color: #6b665c">Freight and duty as % of FOB unless entered in $</span></div>
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 12px 16px; border-bottom: 1px solid #e4dfd6"><span style="font-weight: 600">IMU %</span><span style="font-family: 'IBM Plex Mono', Menlo, Consolas, monospace; font-size: 13px; color: #145843">(Retail − Landed) ÷ Retail</span></div>
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 12px 16px; border-bottom: 1px solid #e4dfd6"><span style="font-weight: 600">Retail for target IMU</span><span style="font-family: 'IBM Plex Mono', Menlo, Consolas, monospace; font-size: 13px; color: #145843">Landed ÷ (1 − target IMU)</span><span style="font-size: 12px; color: #6b665c">Rounded up to the nearest .50 price point</span></div>
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 12px 16px; border-bottom: none"><span style="font-weight: 600">Markup after promo</span><span style="font-family: 'IBM Plex Mono', Menlo, Consolas, monospace; font-size: 13px; color: #145843">(Retail × (1 − off) − Landed) ÷ (Retail × (1 − off))</span></div>
+    
+</div>
+    <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: baseline; padding: 4px 2px 0"><span style="font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #6b665c">Selling</span></div>
+    <div style="display: flex; flex-direction: column; background: #ffffff; border: 1px solid #e4dfd6; border-radius: 14px; overflow: hidden">
+
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 12px 16px; border-bottom: 1px solid #e4dfd6"><span style="font-weight: 600">Sell-through %</span><span style="font-family: 'IBM Plex Mono', Menlo, Consolas, monospace; font-size: 13px; color: #145843">Sold ÷ Received</span></div>
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 12px 16px; border-bottom: 1px solid #e4dfd6"><span style="font-weight: 600">Rate of sale</span><span style="font-family: 'IBM Plex Mono', Menlo, Consolas, monospace; font-size: 13px; color: #145843">Sold ÷ Weeks on floor</span></div>
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 12px 16px; border-bottom: 1px solid #e4dfd6"><span style="font-weight: 600">Weeks of supply</span><span style="font-family: 'IBM Plex Mono', Menlo, Consolas, monospace; font-size: 13px; color: #145843">On hand ÷ Rate of sale</span></div>
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 12px 16px; border-bottom: 1px solid #e4dfd6"><span style="font-weight: 600">Maintained markup</span><span style="font-family: 'IBM Plex Mono', Menlo, Consolas, monospace; font-size: 13px; color: #145843">(AUR − Landed) ÷ AUR</span></div>
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 12px 16px; border-bottom: none"><span style="font-weight: 600">GMROI</span><span style="font-family: 'IBM Plex Mono', Menlo, Consolas, monospace; font-size: 13px; color: #145843">Gross margin $ ÷ Average inventory at cost</span><span style="font-size: 12px; color: #6b665c">Average inventory = (Received + On hand) ÷ 2 × Landed</span></div>
+    
+</div>
+  
+      </div>
+    </div>
+    
+    <div style="display: flex; flex-direction: row; justify-content: space-around; align-items: flex-start; padding: 10px 8px 28px; border-top: 1px solid #e4dfd6; background: #ffffff; flex-shrink: 0">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 3px; width: 72px; min-height: 44px; color: #9a948a"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11.5 12 5l8 6.5"></path><path d="M6 10.5V19h12v-8.5"></path></svg><span style="font-size: 11px; font-weight: 500; letter-spacing: 0.01em">Home</span></div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 3px; width: 72px; min-height: 44px; color: #9a948a"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h7l9 9-7 7-9-9V4z"></path><circle cx="8.5" cy="8.5" r="1.25"></circle></svg><span style="font-size: 11px; font-weight: 500; letter-spacing: 0.01em">New item</span></div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 3px; width: 72px; min-height: 44px; color: #9a948a"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19h16"></path><path d="M7 15v-4"></path><path d="M12 15V7"></path><path d="M17 15v-7"></path></svg><span style="font-size: 11px; font-weight: 500; letter-spacing: 0.01em">Assess</span></div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 3px; width: 72px; min-height: 44px; color: #1f7a5c"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14"></path><path d="M5 12h14"></path><path d="M5 17h14"></path><circle cx="9" cy="7" r="1.75" fill="currentColor"></circle><circle cx="15" cy="12" r="1.75" fill="currentColor"></circle><circle cx="8" cy="17" r="1.75" fill="currentColor"></circle></svg><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.01em">Setup</span></div>
+    </div>
+  </div>
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {}
+</script>
+</body>
+</html>
