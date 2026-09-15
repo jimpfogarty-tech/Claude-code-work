@@ -1,0 +1,134 @@
+{
+  "pages": [
+    {
+      "id": "page-1",
+      "name": "Screens"
+    },
+    {
+      "id": "page-2",
+      "name": "Alternates"
+    }
+  ],
+  "artboards": [
+    {
+      "file": "Main.dc.html",
+      "title": "Home",
+      "x": 0,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "page": "page-1"
+    },
+    {
+      "file": "NewItem.dc.html",
+      "title": "New item · inputs",
+      "x": 500,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "page": "page-1"
+    },
+    {
+      "file": "NewItemResult.dc.html",
+      "title": "New item · math",
+      "x": 1000,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "page": "page-1"
+    },
+    {
+      "file": "Assess.dc.html",
+      "title": "Assess · inputs",
+      "x": 1500,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "page": "page-1"
+    },
+    {
+      "file": "Verdict.dc.html",
+      "title": "Assess · verdict",
+      "x": 2000,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "page": "page-1"
+    },
+    {
+      "file": "Items.dc.html",
+      "title": "Items",
+      "x": 2500,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "page": "page-1"
+    },
+    {
+      "file": "Setup.dc.html",
+      "title": "Setup",
+      "x": 3000,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "page": "page-1"
+    },
+    {
+      "file": "Formulas.dc.html",
+      "title": "Formulas",
+      "x": 3500,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "page": "page-1"
+    },
+    {
+      "file": "AltLedger.dc.html",
+      "title": "Alt A · Ledger grid",
+      "x": 0,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "page": "page-2"
+    },
+    {
+      "file": "AltGuided.dc.html",
+      "title": "Alt B · One question at a time",
+      "x": 500,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "page": "page-2"
+    }
+  ],
+  "annotations": [
+    {
+      "id": "flow",
+      "x": 0,
+      "y": -260,
+      "w": 520,
+      "page": "page-1",
+      "text": "MerchMath — flow\n\nHome → New item (inputs) → New item math (IMU, price ladder, promo depth) → Save to Items\nHome → Assess item (inputs) → Verdict (sell-through, WOS, GMROI, coverage, reorder qty) → Save\nSetup holds target IMU by class, freight/duty defaults, promo floor, and the verdict rules. Formulas shows every calculation the app uses.\n\nSample values are illustrative: duty rates, class targets and the season calendar come from the merchant's own setup."
+    },
+    {
+      "id": "direction",
+      "x": 1000,
+      "y": -260,
+      "w": 460,
+      "page": "page-1",
+      "text": "Direction: paper ledger\n\nWarm paper ground, ink type, one green accent reserved for margin and go decisions. Serif only for screen titles and the one big number per screen; IBM Plex Sans with tabular figures everywhere numbers line up.\n\nStatic mockups. The live result strip on New item and the verdict banner are the two moments the app should feel instant."
+    },
+    {
+      "id": "alts",
+      "x": 0,
+      "y": -200,
+      "w": 520,
+      "page": "page-2",
+      "text": "Two directions not taken, kept for comparison. Alt A trades one-handed use for density; Alt B trades speed for hand-holding, and its painted keypad is deliberate: an in-app numeric pad, not a fake system keyboard. The main direction sits between them: one form per task, live result pinned at the bottom."
+    }
+  ],
+  "launch": {
+    "view": "canvas",
+    "page": "page-1"
+  }
+}

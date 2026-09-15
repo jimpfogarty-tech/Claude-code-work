@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Patrick+Hand&amp;display=swap">
+  <style>
+    body { margin: 0; background: #fbfaf7; color: #333; font-family: 'Patrick Hand', 'Comic Sans MS', cursive; font-size: 16px; }
+    a { color: #1f7a5c; } a:hover { color: #145843; }
+    * { box-sizing: border-box; }
+  </style>
+</helmet>
+<div style="width: 390px; height: 844px; display: flex; flex-direction: column; gap: 12px; padding: 56px 20px 24px; background: #fbfaf7; overflow: hidden">
+  <div style="font-size: 26px; font-weight: 700">Alt A · Ledger grid</div>
+  <div style="font-size: 14px; color: #777">Everything on one dense sheet. Fastest for a merchant who thinks in columns; hardest to use one-handed.</div>
+
+  <div style="display: flex; flex-direction: column; border: 2px solid #555; border-radius: 6px; overflow: hidden">
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border-bottom: 1px solid #999; font-weight: 700; background: #eee"><span style="padding: 6px; border-right: 1px solid #999">Style</span><span style="padding: 6px; border-right: 1px solid #999; text-align: right">Cost</span><span style="padding: 6px; border-right: 1px solid #999; text-align: right">Retail</span><span style="padding: 6px; text-align: right">IMU</span></div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border-bottom: 1px solid #999; font-weight: 400; background: transparent"><span style="padding: 6px; border-right: 1px solid #999">41822</span><span style="padding: 6px; border-right: 1px solid #999; text-align: right">17.32</span><span style="padding: 6px; border-right: 1px solid #999; text-align: right">59.50</span><span style="padding: 6px; text-align: right">70.9</span></div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border-bottom: 1px solid #999; font-weight: 400; background: transparent"><span style="padding: 6px; border-right: 1px solid #999">41790</span><span style="padding: 6px; border-right: 1px solid #999; text-align: right">51.20</span><span style="padding: 6px; border-right: 1px solid #999; text-align: right">129.00</span><span style="padding: 6px; text-align: right">60.3</span></div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border-bottom: 1px solid #999; font-weight: 400; background: transparent"><span style="padding: 6px; border-right: 1px solid #999">41655</span><span style="padding: 6px; border-right: 1px solid #999; text-align: right">12.10</span><span style="padding: 6px; border-right: 1px solid #999; text-align: right">39.50</span><span style="padding: 6px; text-align: right">69.4</span></div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border-bottom: 1px solid #999; font-weight: 400; background: transparent"><span style="padding: 6px; border-right: 1px solid #999">+ add row</span><span style="padding: 6px; border-right: 1px solid #999; text-align: right"></span><span style="padding: 6px; border-right: 1px solid #999; text-align: right"></span><span style="padding: 6px; text-align: right"></span></div>
+  </div>
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px"><div style="display: flex; align-items: center; justify-content: center; min-height: 56px; border: 2px solid #555; border-radius: 6px; color: #555; text-align: center; padding: 6px">IMU 64.6%</div><div style="display: flex; align-items: center; justify-content: center; min-height: 56px; border: 2px solid #555; border-radius: 6px; color: #555; text-align: center; padding: 6px">3 styles</div><div style="display: flex; align-items: center; justify-content: center; min-height: 56px; border: 2px solid #555; border-radius: 6px; color: #555; text-align: center; padding: 6px">Markup $147.38</div></div>
+  <div style="display: flex; align-items: center; justify-content: center; min-height: 44px; border: 2px solid #555; border-radius: 6px; color: #555; text-align: center; padding: 6px; border-style: dashed">Swipe a row → assess it</div>
+  <div style="display: flex; flex-direction: column; gap: 8px; padding: 12px; border: 2px solid #555; border-radius: 6px; margin-top: auto">
+    <div style="font-weight: 700">30301 · Rib-knit henley</div>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px"><div style="display: flex; align-items: center; justify-content: center; min-height: 48px; border: 2px solid #555; border-radius: 6px; color: #555; text-align: center; padding: 6px">ST 58%</div><div style="display: flex; align-items: center; justify-content: center; min-height: 48px; border: 2px solid #555; border-radius: 6px; color: #555; text-align: center; padding: 6px">WOS 5.1</div><div style="display: flex; align-items: center; justify-content: center; min-height: 48px; border: 2px solid #555; border-radius: 6px; color: #555; text-align: center; padding: 6px; background: #dfeee7">Reorder</div></div>
+    <div style="display: flex; align-items: center; justify-content: center; min-height: 36px; border: 2px solid #555; border-radius: 6px; color: #555; text-align: center; padding: 6px; border-style: dashed; font-size: 14px">Row detail drawer slides up over the sheet</div>
+  </div>
+  <div style="display: flex; align-items: center; justify-content: center; min-height: 44px; border: 2px solid #555; border-radius: 6px; color: #555; text-align: center; padding: 6px">Tab bar: Sheet · Items · Setup</div>
+
+</div>
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {}
+</script>
+</body>
+</html>
