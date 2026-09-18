@@ -7,6 +7,12 @@ Design source lives in `design/`: `build.mjs` generates one artboard
 (`*.dc.html`) per screen plus `canvas.json`. Run `node build.mjs` from
 that folder to regenerate after edits.
 
+The working app is `index.html`, `app.css`, `app.js` and `math.js` in
+this folder, with no build step. It deploys with the rest of the site to
+https://jimpfogarty-tech.github.io/Claude-code-work/merchmath/ and keeps
+setup and saved items in the browser's local storage. `math.js` holds
+every calculation and runs in Node as well as the browser.
+
 ## Who it is for
 
 Buyers, associate buyers and planners who price new styles and make
